@@ -1,0 +1,28 @@
+{
+    "firstName": "Kathleen",
+    "lastName": "Hernandez",
+    "locations": [
+        "Palo Alto",
+        "white house",
+        "San Francisco"
+    ],
+    "age": 25,
+    "social_media": 3,
+    "accounts": [
+        {
+            "site": "Facebook",
+            "user": "Kathleen",
+            "password": "jubleu5463"
+        },
+        {
+            "site": "Twitter",
+            "user": "Kathleen",
+            "password": "kathdan32!"
+        },
+        {
+            "site": "Instagram",
+            "user": "Kathleen",
+            "password": "kathleen_hernandez"
+        }
+    ]
+}

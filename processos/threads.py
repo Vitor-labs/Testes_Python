@@ -1,25 +1,41 @@
 import time
-import threading
-from multiprocessing import Process, cpu_count
+from threading import Thread, Lock
+
+inicial_data = 0
 
 
-def contar(lim):
-    aux = 0
-    while aux < lim:
-        aux += 1
+def thread_func(num, lock):
+    global inicial_data
+
+    lock.acquire()
+    for i in range(10):
+        inicial_data += 1
+        print('Thread {}: {}'.format(num, inicial_data))
+        time.sleep(1)
+
+    lock.release()
 
 
 def main():
+    print('Iniciando o processo principal')
+    print('Processo principal: {}'.format(inicial_data))
 
-    print(cpu_count())
+    lock = Lock()
 
-    a = Process(target=contar, args=(1000,))
+    thread1 = Thread(target=thread_func, args=(1, lock))
+    thread2 = Thread(target=thread_func, args=(2, lock))
 
-    print("Iniciando processo contador")
-    a.start()
-    a.join()
+    thread1.start()
+    thread2.start()
+
+    thread1.join()
+    thread2.join()
 
     print("Finalizado em ", time.perf_counter(), " segundos")
+
+
+if __name__ == "__main__":
+    main()
 
 
 # def timer():
@@ -64,6 +80,3 @@ def main():
 # print(threading.active_count())
 # print(threading.enumerate())
 # print(time.perf_counter())
-
-if __name__ == "__main__":
-    main()

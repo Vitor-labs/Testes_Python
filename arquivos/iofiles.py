@@ -69,14 +69,16 @@ def cor_texto():
 def fonte_texto():
     janela_fonte = Toplevel()
 
-    fontes = OptionMenu(janela_fonte, fonte, *font.families()).grid(row=0, column=0)
+    fontes = OptionMenu(janela_fonte, fonte, *
+                        font.families()).grid(row=0, column=0)
     botao = Button(janela_fonte, text="Aplicar", command=texto.config(font=(fonte.get(), fonte_tam.get())))\
         .grid(row=0, column=1)
 
 
 def tamanho_texto():
     janela_tamanho = Toplevel()
-    size_box = Spinbox(janela_tamanho, from_=6, to=68, textvariable=fonte_tam).grid(row=0, column=0)
+    size_box = Spinbox(janela_tamanho, from_=6, to=68,
+                       textvariable=fonte_tam).grid(row=0, column=0)
     botao = Button(janela_tamanho, text="Aplicar", command=texto.config(font=(fonte.get(), size_box.get())))\
         .grid(row=0, column=1)
 
@@ -102,7 +104,7 @@ x = int((screen_width / 2) - (550 / 2))
 y = int((screen_height / 2) - (650 / 2))
 
 window.geometry("{}x{}+{}+{}".format(550, 600, x, y))
-icon = PhotoImage(file="rob.png")
+icon = PhotoImage(file="arquivos/rob.png")
 window.iconphoto(True, icon)
 # ======================
 # Configurações do editor de texto

@@ -23,7 +23,7 @@ label.pack()
 
 entrada = Entry(window,
                 font=('arial', 22),
-                fg="#00ff00", bg="black", show="* ")
+                fg="#00ff00", bg="black")
 
 entrada.pack(side='left')
 
