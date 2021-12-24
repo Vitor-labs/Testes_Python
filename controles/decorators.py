@@ -12,6 +12,7 @@ def repeat(num_times):
     return decorator_repeat
 
 
+# debug decorator, use a lot :)
 def debug(func):
     @ft.wraps(func)
     def wrapper(*args, **kwargs):

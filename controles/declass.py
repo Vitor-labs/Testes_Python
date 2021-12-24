@@ -9,6 +9,14 @@ class contador:
         return self.func(*args, **kwargs)
 
 
+def outline(func):
+    def inner(*args, **kwargs):
+        func(*args, **kwargs)
+        print('-' * 30)
+    return inner
+
+
+@outline
 @contador
 def olha_eu(nome):
     print(f'Olha eu, {nome}')

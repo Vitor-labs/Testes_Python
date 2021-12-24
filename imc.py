@@ -1,3 +1,8 @@
+class error(RuntimeError):
+    def __init__(self, message):
+        self.message = message
+
+
 def calcimc(peso, altura):
     imc = peso/(altura * altura)
     avaliaResult(imc)
@@ -13,11 +18,17 @@ def avaliaResult(result):
         print("Seu IMC está muito alto")
 
 
-try:
-    altura = float(input("Digite sua altura: "))
-    peso = float(input("Digite seu peso: "))
-    print("Seu IMC é: " + str(calcimc(peso, altura)))
+altura = float(input("Digite sua altura: "))
+peso = float(input("Digite seu peso: "))
 
+try:
+    assert(altura > 0)
+    assert(peso > 0)
+
+    result = str(calcimc(peso, altura))
+
+except AssertionError:
+    print('Altura ou peso inválido')
 except ZeroDivisionError as exc:
     print(str(exc)+" Digite apenas valores acima de 0")
 except ValueError as exc:
@@ -26,6 +37,6 @@ except Exception as exc:
     print(str(exc)+" Algo deu errado :(")
 
 else:
-    print("Fim.")
+    print("Seu IMC é: " + result)
 finally:
-    print("Have a good day")
+    print("END, Have a good day")
