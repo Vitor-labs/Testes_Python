@@ -28,20 +28,20 @@ def connection(db_name) -> sqlite3.Connection:
 
 
 # Table creation
-def create_table(name, *args) -> bool:
+def create_table(db_name, t_name, *args) -> bool:
     """
     Create a table
     :param name:
     :param args:
     :return:
     """
-    line = 'CREATE TABLE IF NOT EXISTS {}'.format(name)
+    line = 'CREATE TABLE IF NOT EXISTS {}'.format(t_name)
     fields = []
     for arg in args:
         fields.append(arg)
     line += '({})'.format(', '.join(fields))
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -54,11 +54,11 @@ def create_table(name, *args) -> bool:
         return True
 
 
-# READ FUNCTION
+# READ FUNCTIONS
 # ================================================================
 
 # Read DataBase value
-def read_data(table, column, value):
+def read_data(db_name, table, column, value):
     """
     Read data from a table
     :param table:
@@ -68,7 +68,7 @@ def read_data(table, column, value):
     """
     line = 'SELECT * FROM {} WHERE {} = {}'.format(table, column, value)
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -79,7 +79,8 @@ def read_data(table, column, value):
         return cursor.fetchall()
 
 
-def read_column(table, column):
+# Read a Column
+def read_column(db_name, table, column):
     """
     Read a column
     :param table:
@@ -88,7 +89,7 @@ def read_column(table, column):
     """
     line = 'SELECT {} FROM {}'.format(column, table)
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -103,7 +104,7 @@ def read_column(table, column):
 # ================================================================
 
 # Insertion in DataBase
-def insert_data(table, **kwargs) -> bool:
+def insert_data(db_name, table, **kwargs) -> bool:
     """
     Insert data into a table
     :param table:
@@ -120,7 +121,35 @@ def insert_data(table, **kwargs) -> bool:
     line += 'VALUES ({})'.format(', '.join(values))
 
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
+        cursor = connectionSQLite.cursor()
+        cursor.execute(line)
+    except sqlite3.OperationalError as e:
+        print('Error: {}'.format(e))
+        return False
+    else:
+        connectionSQLite.commit()
+    finally:
+        connectionSQLite.close()
+        return True
+
+
+# Insert Many Data
+def insert_many(db_name, table, *args) -> bool:
+    """
+    Insert a line data into a table
+    :param table:
+    :param kwargs:
+    :return:
+    """
+    line = 'INSERT INTO {}'.format(table)
+    values = []
+    for arg in args:
+        values.append(arg)
+    line += 'VALUES ({})'.format(', '.join(values))
+
+    try:
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.executemany(line)
     except sqlite3.OperationalError as e:
@@ -134,7 +163,7 @@ def insert_data(table, **kwargs) -> bool:
 
 
 # Update DataBase
-def update_data(table, **kwargs) -> bool:
+def update_data(db_name, table, **kwargs) -> bool:
     """
     Update data in a table
     :param table:
@@ -151,7 +180,7 @@ def update_data(table, **kwargs) -> bool:
     line += 'WHERE {}'.format(values)
 
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.executemany(line)
     except sqlite3.OperationalError as e:
@@ -168,7 +197,7 @@ def update_data(table, **kwargs) -> bool:
 # ================================================================
 
 # Delete Table
-def drop_table(name) -> bool:
+def drop_table(db_name, name) -> bool:
     """
     Drop a table
     :param name:
@@ -176,7 +205,7 @@ def drop_table(name) -> bool:
     """
     line = 'DROP TABLE IF EXISTS {}'.format(name)
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -190,7 +219,7 @@ def drop_table(name) -> bool:
 
 
 # Delete Column
-def drop_column(table, column) -> bool:
+def drop_column(db_name, table, column) -> bool:
     """
     Delete a column
     :param table:
@@ -199,7 +228,7 @@ def drop_column(table, column) -> bool:
     """
     line = 'ALTER TABLE {} DROP COLUMN {}'.format(table, column)
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -215,7 +244,7 @@ def drop_column(table, column) -> bool:
 
 
 # Delete Value
-def drop_value(column, table, value) -> bool:
+def drop_value(db_name, column, table, value) -> bool:
     """
     Delete a value in a column
     :param column:
@@ -225,7 +254,7 @@ def drop_value(column, table, value) -> bool:
     """
     line = 'DELETE FROM {} WHERE {} = {}'.format(table, column, value)
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(line)
     except sqlite3.OperationalError as e:
@@ -241,14 +270,14 @@ def drop_value(column, table, value) -> bool:
 
 
 # helper function to execute a query in the database
-def execute_query(query):
+def execute_query(db_name, query):
     """
     Execute a query
     :param query:
     :return:
     """
     try:
-        connectionSQLite = connection('test.db')
+        connectionSQLite = connection(db_name)
         cursor = connectionSQLite.cursor()
         cursor.execute(query)
     except sqlite3.OperationalError as e:
