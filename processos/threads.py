@@ -1,37 +1,54 @@
 import time
+import logging
+import random
 from threading import Thread, Lock
 
 inicial_data = 0
+counter = 0
+
+
+def long_task(num, name):
+    max = random.randrange(1, num)
+    start = time.time()
+    logging.info('Task {} started'.format(name))
+    logging.info('Task {}: have {} mini-tasks'.format(name, max))
+
+    for i in range(max):
+        thread_func(i, Lock())
+        global counter
+        counter += 1
+        logging.info('Mini-Task {} finished'.format(i))
+
+    logging.info('Task {} completed in {}\n'.format(name, time.time() - start))
 
 
 def thread_func(num, lock):
     global inicial_data
-
-    lock.acquire()
-    for i in range(10):
-        inicial_data += 1
+    with lock:
+        inicial_data += 2
         print('Thread {}: {}'.format(num, inicial_data))
-        time.sleep(1)
-
-    lock.release()
 
 
 def main():
-    print('Iniciando o processo principal')
-    print('Processo principal: {}'.format(inicial_data))
+    logging.basicConfig(
+        level=logging.DEBUG, format='%(levelname)s: %(asctime)s [%(threadName)s] -> %(message)s', datefmt='%H:%M:%S')
 
-    lock = Lock()
+    logging.info('Stating Main')
+    logging.info('Initial data: {}'.format(inicial_data))
+    long_task(10, 'Task unique')
 
-    thread1 = Thread(target=thread_func, args=(1, lock))
-    thread2 = Thread(target=thread_func, args=(2, lock))
+    threads = []
+    for _ in range(5):
+        thread = Thread(target=long_task, args=(
+            3, 'do something {}'.format(_)))
+        threads.append(thread)
+        thread.start()
 
-    thread1.start()
-    thread2.start()
+    for _ in threads:
+        _.join()
 
-    thread1.join()
-    thread2.join()
-
-    print("Finalizado em ", time.perf_counter(), " segundos")
+    logging.info('Final data: {}, Counted {}'.format(inicial_data, counter))
+    logging.info('Ending Main, Finished in {}'.format(time.perf_counter()))
 
 
 if __name__ == "__main__":
