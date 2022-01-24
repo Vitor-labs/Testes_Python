@@ -1,0 +1,7 @@
+!HELLO WORLD!
+
+This email has been seended with python code
+This is only a test, don't worry
+
+kind regards
+V.
