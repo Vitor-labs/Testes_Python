@@ -1,5 +1,8 @@
 from multiprocessing import Array, Process, Value, Lock
 import os
+from rich.console import Console
+
+console = Console()
 
 
 def info(title):
@@ -7,6 +10,7 @@ def info(title):
     print('module name:', __name__)
     print('parent process:', os.getppid())
     print('process id:', os.getpid())
+    console.log('\n', log_locals=True)
 
 
 def add_10(x, valor, lock):

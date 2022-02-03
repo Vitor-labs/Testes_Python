@@ -2,12 +2,26 @@ import time
 import logging
 import random
 from threading import Thread, Lock
+import os
+from rich.console import Console
+
+console = Console()
+
+
+def info(title):
+    print(title)
+    print('module name:', __name__)
+    print('parent process:', os.getppid())
+    print('process id:', os.getpid())
+    console.log('\n', log_locals=True)
+
 
 inicial_data = 0
 counter = 0
 
 
 def long_task(num, name):
+    info('long_task')
     max = random.randrange(1, num)
     start = time.time()
     logging.info('Task {} started'.format(name))
@@ -23,6 +37,7 @@ def long_task(num, name):
 
 
 def thread_func(num, lock):
+    info('thread_func')
     global inicial_data
     with lock:
         inicial_data += 2
@@ -30,6 +45,7 @@ def thread_func(num, lock):
 
 
 def main():
+    info('main')
     logging.basicConfig(
         level=logging.DEBUG, format='%(levelname)s: %(asctime)s [%(threadName)s] -> %(message)s', datefmt='%H:%M:%S')
 

@@ -1,3 +1,14 @@
+from sre_constants import SUCCESS
+from rich.console import Console
+from rich.text import Text
+#from rich.table import Table
+from rich.theme import Theme
+from rich import print
+
+tema = Theme({"SUCCESS": "green", "FAIL": "bold red"})
+console = Console(theme=tema)
+
+
 class error(RuntimeError):
     def __init__(self, message):
         self.message = message
@@ -10,12 +21,16 @@ def calcimc(peso, altura):
 
 
 def avaliaResult(result):
+    text = Text("")
     if result < 18:
-        print("Seu IMC está muito baixo ")
+        text.append("Você está abaixo do peso", style="FAIL")
+        console.print(text)
     elif result < 26:
-        print("Seu IMC está normal")
+        text.append("Você está no peso ideal", style="SUCCESS")
+        console.print(text)
     else:
-        print("Seu IMC está muito alto")
+        text.append("Você está acima do peso", style="FAIL")
+        console.print(text)
 
 
 altura = float(input("Digite sua altura: "))
