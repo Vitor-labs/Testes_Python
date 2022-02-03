@@ -2,6 +2,10 @@ import sqlite3
 import unittest
 from testsqlite import *
 
+#
+# OLD TESTING CODE HERE
+#
+
 
 class testeBD(unittest.TestCase):
     def test_bd_connection(self):
